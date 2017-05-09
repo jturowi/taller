@@ -98,6 +98,35 @@ class EstadoViewSet(viewsets.ModelViewSet):
     filter_class = EstadoFilter
     ordering_fields = ('nombre', )
 
+    def create(self, request):
+        print(request.user)
+        pais_id = int(request.data['pais_id'])
+        pais = Pais.objects.get(pk=pais_id)        
+        estado = Estado.objects.create(
+            nombre=request.data['nombre'],
+            codigo=request.data['codigo'],
+            pais=pais
+        )
+
+        
+        serializer = EstadoSerializer(instance=estado)
+        return Response(serializer.data)
+
+    def update(self, request, pk):
+        # estado_id = int(request.data['estado_id'])
+        pais_id = int(request.data['pais_id'])
+        nombre=request.data['nombre']
+        codigo=request.data['codigo']
+        pais = Pais.objects.get(pk=pais_id)
+        estado = Estado.objects.get(pk=pk)
+        estado.pais=pais
+        estado.nombre=nombre
+        estado.codigo=codigo
+        estado.save()
+
+        serializer = EstadoSerializer(instance=estado)
+        return Response(serializer.data)
+        
 class CiudadFilter(django_filters.rest_framework.FilterSet):
     """ 
     Filtro para Ciudades 

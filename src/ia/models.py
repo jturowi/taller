@@ -105,7 +105,29 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(null=True, blank=True)
     token = models.CharField(max_length=255, null=True, blank=True)
     password = models.CharField(max_length=128)
-    cia = models.ForeignKey('Cia', related_name='cias', null=True, blank=True, on_delete=models.PROTECT) 
+    cia = models.ForeignKey('Cia', related_name='cias', null=True, blank=True, on_delete=models.PROTECT)
+    tz = models.CharField(max_length=40, blank=True)  
+
+
+ 
+    # import pytz
+    # import datetime
+
+    # >>> utc =pytz.timezone('UTC')
+    # >>> 
+    # >>> datetime.datetime(2017, 5, 9, 12, 0, tzinfo=utc)
+    # datetime.datetime(2017, 5, 9, 12, 0, tzinfo=<UTC>)
+    # >>> print(datetime)
+    # <module 'datetime' from 'C:\\Users\\josepc\\AppData\\Local\\Programs\\Python\\Python36\\lib\\datetime.py'>
+    # >>> fecha1 = datetime.datetime(2017, 5, 9, 12, 0, tzinfo=utc)
+    # >>> print(fecha1)
+    # 2017-05-09 12:00:00+00:00
+    # >>> est = pytz.timezone('US/Eastern')
+    # >>> fecha2 = fecha1.astimezone(est)
+    # >>> print(fecha1)
+    # 2017-05-09 12:00:00+00:00
+    # >>> print(fecha2)
+    # 2017-05-09 08:00:00-04:00  
  
     objects = UsuarioManager()
 
@@ -262,7 +284,7 @@ class PersonaNatural(models.Model):
     rif = models.CharField(max_length=35, null=True, blank=True) 
     fecha_nacimiento = models.DateTimeField(null=True, blank=True)    
     sexo = models.PositiveSmallIntegerField(default=0) 
-    estado_civil = models.PositiveSmallIntegerField(default=0) 
+    estado_civil = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         db_table = "persona_natural"     
@@ -358,5 +380,41 @@ class DocRepDet(models.Model):
         db_table = "doc_rep_det"  
 
 
+class Perfil(models.Model):
+    perfil_id = models.BigAutoField(primary_key=True)
+    nombre = models.CharField(max_length=100, unique=True)
+
+    class Meta:         
+        db_table = "perfil"  
+
+class Ventana(models.Model):
+    ventana_id = models.BigAutoField(primary_key=True)
+    nombre = models.CharField(max_length=100, unique=True)
+
+    class Meta:         
+        db_table = "ventana"  
+
+class UserPerfil(models.Model):
+    userperfil_id = models.BigAutoField(primary_key=True) 
+    usuario = models.ForeignKey('Usuario', related_name='up_usuarios', null=False, blank=False, on_delete=models.PROTECT) 
+    perfil = models.ForeignKey('Perfil', related_name='up_perfiles', null=False, blank=False, on_delete=models.PROTECT) 
+
+    class Meta:         
+        db_table = "userperfil" 
+
+        unique_together = [
+                "usuario", "perfil"
+            ]
+
+class PerfilDet(models.Model):
+    perfildet_id = models.BigAutoField(primary_key=True)
+    perfil = models.ForeignKey('Perfil', related_name='det_perfiles', null=False, blank=False, on_delete=models.PROTECT) 
+    ventana = models.ForeignKey('Ventana', related_name='det_ventanas', null=False, blank=False, on_delete=models.PROTECT) 
+    evento = models.CharField(max_length=100, null=False, blank=False)
 
 
+    class Meta:         
+        db_table = "perfildet"  
+        unique_together = [
+               "ventana", "perfil", "evento"
+            ]

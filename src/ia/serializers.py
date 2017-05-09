@@ -64,6 +64,7 @@ class PaisSerializer(serializers.ModelSerializer):
 
 class EstadoSerializer(serializers.ModelSerializer):
 	# pais = PaisSerializer(many=False, read_only=True)
+	# pais = serializers.PrimaryKeyRelatedField(many=False, queryset=Pais.objects.all())
 	class Meta:
 		model = Estado
 		fields = ['estado_id', 'nombre', 'codigo', 'pais']
