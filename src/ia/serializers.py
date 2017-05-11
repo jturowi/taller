@@ -63,11 +63,18 @@ class PaisSerializer(serializers.ModelSerializer):
 		fields = ['pais_id', 'nombre', 'codigo']
 
 class EstadoSerializer(serializers.ModelSerializer):
+	# to_user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+	# to_user = UserSerializer(read_only=True)
 	# pais = PaisSerializer(many=False, read_only=True)
+	# pais_id = serializers.PrimaryKeyRelatedField(queryset=Pais.objects.all(), read_only=False)
+	# pais = PaisSerializer(read_only=True)
+
 	# pais = serializers.PrimaryKeyRelatedField(many=False, queryset=Pais.objects.all())
 	class Meta:
 		model = Estado
-		fields = ['estado_id', 'nombre', 'codigo', 'pais']
+		# fields = ['estado_id', 'nombre', 'codigo', 'fecha', 'costo', 'activo', 'pais_id']
+		fields = ('__all__')  
+		# order_by = (('estado_id',))
 		depth = 1
 
 class CiudadSerializer(serializers.ModelSerializer):

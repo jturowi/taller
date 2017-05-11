@@ -106,7 +106,7 @@ class PaisAdmin(admin.ModelAdmin):
 
 @admin.register(Estado)
 class EstadoAdmin(admin.ModelAdmin):
-	list_display = ('pais_id', 'estado_id', 'nombre', 'codigo')
+	list_display = ('pais_id', 'estado_id', 'nombre', 'codigo', 'fecha', 'costo', 'activo')
 
 @admin.register(Ciudad)
 class CiudadAdmin(admin.ModelAdmin):

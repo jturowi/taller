@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -120,6 +121,8 @@ DATABASES = {
         'PASSWORD':'p1957',
         'HOST':'localhost',
         'PORT':5432,
+        'ATOMIC_REQUESTS': True,
+        # 'AUTOCOMMIT': False,
     }
 }
 
@@ -158,7 +161,7 @@ REST_FRAMEWORK = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -168,7 +171,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+LOCALE_PATHS = (
+    os.path.join(os.path.dirname(__file__), "locale"),
+)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
@@ -179,3 +184,4 @@ AUTH_USER_MODEL = 'ia.Usuario'
 JWT_AUTH = {    
     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=12),  
 }
+

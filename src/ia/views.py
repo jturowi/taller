@@ -9,6 +9,9 @@ from django.db import connections
 
 import json
 import datetime
+from datetime import datetime
+from decimal import *
+# from dateutil import parser
 
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -37,8 +40,19 @@ from ia.serializers import PersonaJuridicaSerializer, PersonaNaturalSerializer
 from ia.serializers import ProductoSerializer, DireccionSerializer, SesionTrabajoSerializer
 from ia.serializers import DocRepSerializer, DocRepDetSerializer, CiaConsecutivoSerializer
 
+from ia.funciones import *
+from django.db import transaction
+from django.db.models import Q
+import pytz
+from rest_framework.exceptions import APIException
+
+from django.utils.translation import ugettext as _
 
 # Create your views here.
+
+class InvalidAPIQuery(APIException):
+    status_code = 400
+    default_detail = _('An invalid query parameter was provided')
 
 def dictfetchall(cursor):
     # Returns all rows from a cursor as a dict
@@ -88,6 +102,8 @@ class EstadoFilter(django_filters.rest_framework.FilterSet):
         model = Estado
         fields = ['pais', 'nombrelike', 'edo_ini', 'edo_fin' ]            
 
+
+
 class EstadoViewSet(viewsets.ModelViewSet):
     """ 
     Estados 
@@ -96,21 +112,59 @@ class EstadoViewSet(viewsets.ModelViewSet):
     serializer_class = EstadoSerializer
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
     filter_class = EstadoFilter
-    ordering_fields = ('nombre', )
+    ordering = ('estado_id')
 
     def create(self, request):
-        print(request.user)
-        pais_id = int(request.data['pais_id'])
-        pais = Pais.objects.get(pk=pais_id)        
-        estado = Estado.objects.create(
-            nombre=request.data['nombre'],
-            codigo=request.data['codigo'],
-            pais=pais
-        )
+        # print(request.user)
+        try:
+            # with transaction.atomic():
+            var1 = 100
+            var2 = 0
+            # pais_id = request.data['pais_id']
+            # pais = Pais.objects.get(pk=pais_id)  
+            sistemaTZ = pytz.timezone('UTC')
+            miTZ = pytz.timezone('EST')
+            fecha = request.data['fecha']
+            # objFecha = parser.parse(fecha)
+            objFecha = strToDatetime(fecha)
+            objFecha2 = objFecha.replace(tzinfo=miTZ)
+            objFecha3 = objFecha.astimezone(sistemaTZ)
+            print("objFecha")
+            print(objFecha)
+            print("objFecha2")
+            print(objFecha2)
+            print("objFecha3")
+            print(objFecha3)
+            # print(objFecha.astimezone(miTZ))
+            print("Tipo de Fecha")
+            print(type(objFecha))
 
-        
-        serializer = EstadoSerializer(instance=estado)
-        return Response(serializer.data)
+            # raise Exception
+
+            pais = Pais.objects.create(
+                nombre="Pais error444",
+                codigo="Pe4")
+
+            pais.save()
+
+            estado = Estado.objects.create(
+                nombre=request.data['nombre'],
+                codigo=request.data['codigo'],
+                fecha=objFecha2,
+                costo=request.data['costo'],
+                activo=request.data['activo'],
+                pais_id=request.data['pais_id']
+            )  
+            # estado = Estado.objects.create(request.data)
+            var3 = midivision(100, 0)
+            serializer = EstadoSerializer(instance=estado)
+
+            return Response(serializer.data)
+
+        except Exception as e:
+            raise InvalidAPIQuery(
+                 _('Error Creando el estado. ') + str(e))
+            
 
     def update(self, request, pk):
         # estado_id = int(request.data['estado_id'])
@@ -304,6 +358,115 @@ class DocRepViewSet(viewsets.ModelViewSet):
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
     filter_class = DocRepFilter
 
+    # @transaction.atomic
+    def create(self, request):
+        
+        try:
+            
+            # with transaction.atomic():
+         
+            cia_id = request.data['cia_id']
+            persona_id = request.data['persona_id']
+            direccion_id = request.data['direccion_id']
+            ucrea_id = request.data['ucrea_id']
+            origen_id = request.data['origen_id']
+
+            tipo_documento = request.data['tipo_documento']
+            credito = request.data['credito']
+            dias_credito = request.data['dias_credito']
+            fecha_emision = request.data['fecha_emision']
+            fecha_vencimiento = request.data['fecha_vencimiento']
+            subtotal = request.data['subtotal']
+            impuesto = request.data['impuesto']
+            total = request.data['total']
+            observaciones = request.data['observaciones']
+
+            # cia = Cia.objects.get(pk=cia_id)   
+            # persona = Persona.objects.get(pk=persona_id)   
+            # direccion = Direccion.objects.get(pk=direccion_id)   
+            # ucrea = Usuario.objects.get(pk=ucrea_id)   
+            # origen = DocRep.objects.get(pk=origen_id)   
+            
+            numero = consecutivo_doc(cia_id, tipo_documento)
+                
+            docrep = DocRep.objects.create(
+                tipo_documento=tipo_documento,
+                numero=numero,
+                credito=credito,
+                dias_credito=dias_credito,
+                fecha_emision=fecha_emision,
+                fecha_vencimiento=fecha_vencimiento,
+                subtotal=subtotal,
+                impuesto=impuesto,
+                total=total,
+                observaciones=observaciones,
+                cia_id=cia_id,
+                persona_id=persona_id,
+                direccion_id=direccion_id,
+                ucrea_id=ucrea_id,
+                origen_id=origen_id
+            )
+
+            serializer = DocRepSerializer(instance=docrep)
+            return Response(serializer.data)
+
+        except Exception as e:
+            raise e
+
+    # @transaction.atomic
+    def update(self, request, pk):
+        
+        try:
+            
+            # with transaction.atomic():
+                          
+            persona_id = request.data['persona_id']
+            direccion_id = request.data['direccion_id']                
+            origen_id = request.data['origen_id']
+            
+            credito = request.data['credito']
+            dias_credito = request.data['dias_credito']
+            fecha_emision = request.data['fecha_emision']
+            fecha_vencimiento = request.data['fecha_vencimiento']
+            subtotal = request.data['subtotal']
+            impuesto = request.data['impuesto']
+            total = request.data['total']
+            observaciones = request.data['observaciones']
+                
+            # persona = Persona.objects.get(pk=persona_id)   
+            # direccion = Direccion.objects.get(pk=direccion_id)                   
+            # origen = DocRep.objects.get(pk=origen_id)   
+            
+            docrep = Docrep.objects.get(pk=pk)
+
+            # cia = Cia.objects.get(pk=docrep.cia)   
+            # ucrea = Usuario.objects.get(pk=docrep.ucrea)
+            # uaprueba = Usuario.objects.get(pk=docrep.uaprueba)
+            # uanula = Usuario.objects.get(pk=docrep.uanula)
+            # ufactura = Usuario.objects.get(pk=docrep.ufactura)
+
+            docrep.credito = credito
+            docrep.dias_credito = dias_credito
+            docrep.fecha_emision = fecha_emision
+            docrep.fecha_vencimiento = fecha_vencimiento
+            docrep.subtotal = subtotal
+            docrep.impuesto = impuesto
+            docrep.total = total
+            docrep.observaciones = observaciones
+
+            docrep.cia_id = cia_id
+            docrep.persona_id = persona_id
+            docrep.direccion_id = direccion_id
+            docrep.ucrea_id = ucrea_id
+            docrep.origen_id = origen_id                
+
+            docrep.save()
+
+            serializer = DocRepSerializer(instance=docrep)
+            return Response(serializer.data)
+                    
+        except Exception as e:
+            raise e
 
 class DocRepDetViewSet(viewsets.ModelViewSet):
     queryset = DocRepDet.objects.all()

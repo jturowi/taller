@@ -173,6 +173,10 @@ class Estado(models.Model):
     pais = models.ForeignKey('Pais', related_name='estados', null=False, blank=False, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=150,  blank=False)
     codigo = models.CharField(max_length=6,  blank=False)
+    fecha = models.DateTimeField(null=True, blank=True)
+    costo = models.DecimalField(max_digits=18, decimal_places=2, default=0) 
+    activo = models.BooleanField(null=False, blank=False, default=True) 
+
 
     class Meta:
         db_table = "estado"
