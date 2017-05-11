@@ -18,7 +18,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-
+from django.utils import translation
 # from django_filters.rest_framework import DjangoFilterBackend
 # from django_filters import rest_framework as filters
 
@@ -99,16 +99,15 @@ class EstadoViewSet(viewsets.ModelViewSet):
     ordering_fields = ('nombre', )
 
     def create(self, request):
-        print(request.user)
-        pais_id = int(request.data['pais_id'])
-        pais = Pais.objects.get(pk=pais_id)        
+        request.session[settings.LANGUAGE_SESSION_KEY] = 'es-VE'
+        pais_id = int(request.data['pais'])
+        pais = Pais.objects.get(pk=pais_id)
         estado = Estado.objects.create(
             nombre=request.data['nombre'],
             codigo=request.data['codigo'],
             pais=pais
         )
 
-        
         serializer = EstadoSerializer(instance=estado)
         return Response(serializer.data)
 

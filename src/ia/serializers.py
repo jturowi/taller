@@ -63,12 +63,12 @@ class PaisSerializer(serializers.ModelSerializer):
 		fields = ['pais_id', 'nombre', 'codigo']
 
 class EstadoSerializer(serializers.ModelSerializer):
-	# pais = PaisSerializer(many=False, read_only=True)
-	# pais = serializers.PrimaryKeyRelatedField(many=False, queryset=Pais.objects.all())
-	class Meta:
-		model = Estado
-		fields = ['estado_id', 'nombre', 'codigo', 'pais']
-		depth = 1
+    pais = PaisSerializer(required=True, many=False)
+    #pais = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Estado
+        fields = ['estado_id', 'nombre', 'codigo', 'pais']
+        depth = 1
 
 class CiudadSerializer(serializers.ModelSerializer):
 	# estado = EstadoSerializer(many=False, read_only=True)

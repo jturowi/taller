@@ -170,7 +170,7 @@ class Pais(models.Model):
 
 class Estado(models.Model):
     estado_id = models.BigAutoField(primary_key=True)
-    pais = models.ForeignKey('Pais', related_name='estados', null=False, blank=False, on_delete=models.PROTECT)
+    pais = models.ForeignKey(Pais, related_name='estados', null=False, blank=False, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=150,  blank=False)
     codigo = models.CharField(max_length=6,  blank=False)
 
