@@ -13,10 +13,12 @@ Debug
 
 # Pendiente ejemplo para manejo de fechas con zona tanto de evio como de recepcion
 
-Localizacion de mensaje de error del sistema y los propios del API personalizado
+#Localizacion de mensaje de error del sistema y los propios del API personalizado
 
-django-admin makemessages -l es
-manage.py compilemessages -l es
+#django-admin makemessages -l es
+#django-admin makemessages -l en
+#manage.py compilemessages -l es
+#manage.py compilemessages -l en
 
 # Manejo de transacciones
 
@@ -35,12 +37,35 @@ Eventos de seguridad para acciones por usuario, departamento y ventana
     Aprobar un pedido
     facturar un pedido
     Anular un pedido
+
+
+Crear Diccionario en el cache en una funcion
+
+Leer Diccionario en el cache en una funcion
+   
         
 ///////////////////////////////////////////////////////////////////////////////////////////////
                                         DUDAS RESUELTAS
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+# import pytz
+    # import datetime
 
+    # >>> utc =pytz.timezone('UTC')
+    # >>> 
+    # >>> datetime.datetime(2017, 5, 9, 12, 0, tzinfo=utc)
+    # datetime.datetime(2017, 5, 9, 12, 0, tzinfo=<UTC>)
+    # >>> print(datetime)
+    # <module 'datetime' from 'C:\\Users\\josepc\\AppData\\Local\\Programs\\Python\\Python36\\lib\\datetime.py'>
+    # >>> fecha1 = datetime.datetime(2017, 5, 9, 12, 0, tzinfo=utc)
+    # >>> print(fecha1)
+    # 2017-05-09 12:00:00+00:00
+    # >>> est = pytz.timezone('US/Eastern')
+    # >>> fecha2 = fecha1.astimezone(est)
+    # >>> print(fecha1)
+    # 2017-05-09 12:00:00+00:00
+    # >>> print(fecha2)
+    # 2017-05-09 08:00:00-04:00  
  
         
 jira control de versiones:

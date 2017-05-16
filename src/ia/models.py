@@ -7,42 +7,40 @@ from django.contrib.auth.models import PermissionsMixin
 # Create your models here.
 
 tipos_15 = (
-        (0, 'N/A'),
-        (1, 'Factura'),
-        (2, 'Nota de Débito'),
-        (3, 'Nota de Crédito'),        
-        (4,	'Pedido'),
-        (5,	'Cotización'),
-        (6,	'Solicitud de Devolución'),
-        (7,	'Solicitud de Nota de Crédito'),
-        (8,	'Solicitud de Nota de Débito'),
-        (9,	'Devolución de Mercancía'),
-        (10, 'Orden TOT'),
-        (11, 'NO USADA'),
-        (12, 'Orden de Compra'),
-        (13, 'Solicitud de Cotización'),
-        (14, 'Nota de Entrega'),
-        (15, 'Recepción'),
-        (16, 'Cierre de Inventario'),
-        (17, 'Nota de Entrada al Inventario'),
-        (18, 'Nota de Salida al Inventario'),
-        (19, 'Transferencia'),
-        (20, 'Devolución de Transferencia'),
-        (21, 'Solicitud de Transferencia'),
-        (22, 'Solicitud de Devolución de Transferencia'),
-        (23, 'Cotización de O/S'),
-        (24, 'Orden de Servicio'),
-        (25, 'Reclamo de Garantía'),
-        (26, 'Prefactura'),
-        (27, 'Anticipo'),
-        (28, 'Cheque Devuelto'),
-        (29, 'Giro'),
-        (30, 'Nota de Débito por Mora'),
-        (31, 'Reclamo de Devolución'),
-        (32, 'Cheque')
-    )
-
-
+    (0, 'N/A'),
+    (1, 'Factura'),
+    (2, 'Nota de Débito'),
+    (3, 'Nota de Crédito'),
+    (4,	'Pedido'),
+    (5,	'Cotización'),
+    (6,	'Solicitud de Devolución'),
+    (7,	'Solicitud de Nota de Crédito'),
+    (8,	'Solicitud de Nota de Débito'),
+    (9,	'Devolución de Mercancía'),
+    (10, 'Orden TOT'),
+    (11, 'NO USADA'),
+    (12, 'Orden de Compra'),
+    (13, 'Solicitud de Cotización'),
+    (14, 'Nota de Entrega'),
+    (15, 'Recepción'),
+    (16, 'Cierre de Inventario'),
+    (17, 'Nota de Entrada al Inventario'),
+    (18, 'Nota de Salida al Inventario'),
+    (19, 'Transferencia'),
+    (20, 'Devolución de Transferencia'),
+    (21, 'Solicitud de Transferencia'),
+    (22, 'Solicitud de Devolución de Transferencia'),
+    (23, 'Cotización de O/S'),
+    (24, 'Orden de Servicio'),
+    (25, 'Reclamo de Garantía'),
+    (26, 'Prefactura'),
+    (27, 'Anticipo'),
+    (28, 'Cheque Devuelto'),
+    (29, 'Giro'),
+    (30, 'Nota de Débito por Mora'),
+    (31, 'Reclamo de Devolución'),
+    (32, 'Cheque')
+)
 
 
 class UsuarioManager(BaseUserManager):
@@ -94,10 +92,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)  
+    is_staff = models.BooleanField(default=False)
     nombre = models.CharField(max_length=60, blank=True)
-    apellido = models.CharField(max_length=100, blank=True)     
-    tipo = models.PositiveSmallIntegerField(default=0)    
+    apellido = models.CharField(max_length=100, blank=True)
+    tipo = models.PositiveSmallIntegerField(default=0)
     genero_codigo = models.BooleanField(default=False)
     codigo_gen = models.IntegerField(null=True, blank=True)
     fecha_gen = models.DateField(null=True, blank=True)
@@ -105,16 +103,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(null=True, blank=True)
     token = models.CharField(max_length=255, null=True, blank=True)
     password = models.CharField(max_length=128)
-    cia = models.ForeignKey('Cia', related_name='cias', null=True, blank=True, on_delete=models.PROTECT)
-    tz = models.CharField(max_length=40, blank=True)  
+    cia = models.ForeignKey('Cia', related_name='cias',
+                            null=True, blank=True, on_delete=models.PROTECT)
+    tz = models.CharField(max_length=40, blank=True)
 
-
- 
     # import pytz
     # import datetime
 
     # >>> utc =pytz.timezone('UTC')
-    # >>> 
+    # >>>
     # >>> datetime.datetime(2017, 5, 9, 12, 0, tzinfo=utc)
     # datetime.datetime(2017, 5, 9, 12, 0, tzinfo=<UTC>)
     # >>> print(datetime)
@@ -127,8 +124,8 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     # >>> print(fecha1)
     # 2017-05-09 12:00:00+00:00
     # >>> print(fecha2)
-    # 2017-05-09 08:00:00-04:00  
- 
+    # 2017-05-09 08:00:00-04:00
+
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'email'
@@ -154,28 +151,31 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """What to show when we output an object as a string."""
 
-        return self.email    
-    
+        return self.email
+
+
 class Pais(models.Model):
     pais_id = models.BigAutoField(primary_key=True)
-    nombre = models.CharField(max_length=150,  blank=False, unique=True)
-    codigo = models.CharField(max_length=6,  blank=False)
+    nombre = models.CharField(max_length=150, blank=False, unique=True)
+    codigo = models.CharField(max_length=6, blank=False)
 
     class Meta:
         db_table = "pais"
         ordering = ['nombre']
 
     def __str__(self):
-        return self.nombre   
+        return self.nombre
+
 
 class Estado(models.Model):
     estado_id = models.BigAutoField(primary_key=True)
-    pais = models.ForeignKey('Pais', related_name='estados', null=False, blank=False, on_delete=models.PROTECT)
+    pais = models.ForeignKey('Pais', related_name='estados',
+                             null=False, blank=False, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=150,  blank=False)
     codigo = models.CharField(max_length=6,  blank=False)
     fecha = models.DateTimeField(null=True, blank=True)
-    costo = models.DecimalField(max_digits=18, decimal_places=2, default=0) 
-    activo = models.BooleanField(null=False, blank=False, default=True) 
+    costo = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    activo = models.BooleanField(null=False, blank=False, default=True)
 
 
     class Meta:
@@ -185,13 +185,29 @@ class Estado(models.Model):
         unique_together = [
             "pais", "nombre"
         ]
+    
+    # class Admin:
+    #     list_display = ('estado_id', 'nombre', 'pais')
+    #     list_filter = ('pais', 'nombre')
+    #     ordering = ('nombre',)
+    #     search_fields = ('nombre',)
+
+    # La opción list_display controla que columnas aparecen en la tabla de la lista. Por defecto, la lista de cambios muestra una sola columna que contiene la representación en cadena de caracteres del objeto. Aquí podemos cambiar eso para mostrar el título, el editor y la fecha de publicación.
+    # La opción list_filter crea una barra de filtrado del lado derecho de la lista. Estaremos habilitados a filtrar por fecha (que te permite ver sólo los libros publicados la última semana, mes, etc.) y por editor.
+
+    # Puedes indicarle a la interfaz de administración que filtre por cualquier campo, pero las claves foráneas, fechas, booleanos, y campos con un atributo de opciones choices son las que mejor funcionan. Los filtros aparecen cuando tienen al menos 2 valores de dónde elegir.
+
+    # La opción ordering controla el orden en el que los objetos son presentados en la interfaz de administración. Es simplemente una lista de campos con los cuales ordenar el resultado; anteponiendo un signo menos a un campo se obtiene el orden reverso. En este ejemplo, ordenamos por fecha de publicación con los más recientes al principio.
+    # Finalmente, la opción search_fields crea un campo que permite buscar texto. En nuestro caso, buscará el texto en el campo título (entonces podrías ingresar Django para mostrar todos los libros con "Django" en el título).
 
     def __str__(self):
         return self.nombre
 
+
 class Ciudad(models.Model):
-    ciudad_id = models.BigAutoField(primary_key=True) 
-    estado = models.ForeignKey('Estado', related_name='ciudades', null=False, blank=False, on_delete=models.PROTECT)
+    ciudad_id = models.BigAutoField(primary_key=True)
+    estado = models.ForeignKey(
+        'Estado', related_name='ciudades', null=False, blank=False, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=150,  blank=False)
     codigo = models.CharField(max_length=6,  blank=False)
 
@@ -205,220 +221,267 @@ class Ciudad(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Cia(models.Model):
-    cia_id = models.BigAutoField(primary_key=True)  
-    razon_social = models.CharField(max_length=250, null=False, blank=False, unique=True) 
-    rif = models.CharField(max_length=35,  blank=False, unique=True)  
+    cia_id = models.BigAutoField(primary_key=True)
+    razon_social = models.CharField(
+        max_length=250, null=False, blank=False, unique=True)
+    rif = models.CharField(max_length=35,  blank=False, unique=True)
 
     class Meta:
         db_table = "cia"
         ordering = ['razon_social']
 
     def __str__(self):
-        return self.razon_social   
+        return self.razon_social
 
-class CiaConsecutivo(models.Model):    
-    ciaconsecutivo_id = models.BigAutoField(primary_key=True) 
-    cia = models.ForeignKey('Cia', related_name='ciaconsecutivos', null=False, blank=False, on_delete=models.PROTECT) 
-    tipo_documento = models.PositiveSmallIntegerField(default=0)  
-    numero = models.IntegerField(default=0)  
+
+class CiaConsecutivo(models.Model):
+    ciaconsecutivo_id = models.BigAutoField(primary_key=True)
+    cia = models.ForeignKey('Cia', related_name='ciaconsecutivos',
+                            null=False, blank=False, on_delete=models.PROTECT)
+    tipo_documento = models.PositiveSmallIntegerField(default=0)
+    numero = models.IntegerField(default=0)
 
     class Meta:
-        db_table = "cia_consecutivo"  
+        db_table = "cia_consecutivo"
         ordering = ['cia', 'tipo_documento']
         unique_together = [
-                "cia", "tipo_documento"
-            ]
-    
+            "cia", "tipo_documento"
+        ]
+
+    def __str__(self):
+        return str(self.tipo_documento) + ' ' + str(self.numero)
+
+
 class UserCia(models.Model):
-    user_cia_id = models.BigAutoField(primary_key=True)  
-    cia = models.ForeignKey('Cia', related_name='cia_usercias', null=False, blank=False, on_delete=models.PROTECT)   
-    usuario = models.ForeignKey('Usuario', related_name='u_usercias', null=True, blank=False, on_delete=models.PROTECT)   
-    tipo_usuario = models.PositiveSmallIntegerField(default=0) 
+    user_cia_id = models.BigAutoField(primary_key=True)
+    cia = models.ForeignKey('Cia', related_name='cia_usercias',
+                            null=False, blank=False, on_delete=models.PROTECT)
+    usuario = models.ForeignKey(
+        'Usuario', related_name='u_usercias', null=True, blank=False, on_delete=models.PROTECT)
+    tipo_usuario = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         db_table = "user_cia"
 
+
 class UserLog(models.Model):
-    user_log_id = models.BigAutoField(primary_key=True)  
-    cia = models.ForeignKey('Cia', related_name='cia_userlogs', null=False, blank=False, on_delete=models.PROTECT)   
-    usuario = models.ForeignKey('Usuario', related_name='u_userlogs', null=False, blank=False, on_delete=models.PROTECT)       
+    user_log_id = models.BigAutoField(primary_key=True)
+    cia = models.ForeignKey('Cia', related_name='cia_userlogs',
+                            null=False, blank=False, on_delete=models.PROTECT)
+    usuario = models.ForeignKey(
+        'Usuario', related_name='u_userlogs', null=False, blank=False, on_delete=models.PROTECT)
     fecha = models.DateTimeField(null=False, blank=False)
-    sesion = models.CharField(max_length=512,  blank=False)   
+    sesion = models.CharField(max_length=512,  blank=False)
 
     class Meta:
-        db_table = "user_log" 
+        db_table = "user_log"
+
 
 class Persona(models.Model):
-    persona_id = models.BigAutoField(primary_key=True)  
-    cia = models.ForeignKey('Cia', related_name='personas', null=False, blank=False, on_delete=models.PROTECT)   
-    nombre = models.CharField(max_length=150,  blank=False)        
-    apellido = models.CharField(max_length=150, null=True, blank=True)        
-    cedula_rif = models.CharField(max_length=35,  blank=False, unique=True)   
-    juridica = models.BooleanField() 
-    activo = models.BooleanField()  
-    bloqueado = models.BooleanField()          
+    persona_id = models.BigAutoField(primary_key=True)
+    cia = models.ForeignKey('Cia', related_name='personas',
+                            null=False, blank=False, on_delete=models.PROTECT)
+    nombre = models.CharField(max_length=150,  blank=False)
+    apellido = models.CharField(max_length=150, null=True, blank=True)
+    cedula_rif = models.CharField(max_length=35,  blank=False, unique=True)
+    juridica = models.BooleanField()
+    activo = models.BooleanField()
+    bloqueado = models.BooleanField()
     ultima_operacion = models.DateTimeField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
 
     class Meta:
-        db_table = "persona" 
+        db_table = "persona"
         ordering = ['cedula_rif']
         unique_together = [
-                "cia", "cedula_rif"
-            ]
+            "cia", "cedula_rif"
+        ]
 
     def __str__(self):
-        return self.nombre   
+        return '%s %s' % (self.nombre, self.apellido)
 
 
 class PersonaJuridica(models.Model):
-    persona = models.OneToOneField(Persona, on_delete=models.PROTECT) 
-    registro_mercantil = models.CharField(max_length=60) 
+    persona = models.OneToOneField(Persona, on_delete=models.PROTECT)
+    registro_mercantil = models.CharField(max_length=60)
     nro_registro = models.CharField(max_length=10)
-    tomo = models.CharField(max_length=6) 
-    fecha_registro = models.DateTimeField() 
+    tomo = models.CharField(max_length=6)
+    fecha_registro = models.DateTimeField()
 
     class Meta:
-        db_table = "persona_juridica"    
+        db_table = "persona_juridica"
+
 
 class PersonaNatural(models.Model):
-    persona = models.OneToOneField(Persona, on_delete=models.PROTECT) 
-    razon_social = models.CharField(max_length=200, null=True, blank=True) 
-    rif = models.CharField(max_length=35, null=True, blank=True) 
-    fecha_nacimiento = models.DateTimeField(null=True, blank=True)    
-    sexo = models.PositiveSmallIntegerField(default=0) 
+    persona = models.OneToOneField(Persona, on_delete=models.PROTECT)
+    razon_social = models.CharField(max_length=200, null=True, blank=True)
+    rif = models.CharField(max_length=35, null=True, blank=True)
+    fecha_nacimiento = models.DateTimeField(null=True, blank=True)
+    sexo = models.PositiveSmallIntegerField(default=0)
     estado_civil = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
-        db_table = "persona_natural"     
+        db_table = "persona_natural"
+
 
 class Producto(models.Model):
-    producto_id = models.BigAutoField(primary_key=True)  
-    cia = models.ForeignKey('Cia', related_name='productos', null=False, blank=False, on_delete=models.PROTECT) 
+    producto_id = models.BigAutoField(primary_key=True)
+    cia = models.ForeignKey('Cia', related_name='productos',
+                            null=False, blank=False, on_delete=models.PROTECT)
     codigo = models.CharField(max_length=35, null=False, blank=False)
-    descripcion = models.CharField(max_length=35, null=False, blank=False)  
+    descripcion = models.CharField(max_length=35, null=False, blank=False)
     precio = models.DecimalField(max_digits=18, decimal_places=2, default=0)
-    costo = models.DecimalField(max_digits=18, decimal_places=6, default=0) 
-    existencia = models.DecimalField(max_digits=18, decimal_places=2, default=0)  
+    costo = models.DecimalField(max_digits=18, decimal_places=6, default=0)
+    existencia = models.DecimalField(
+        max_digits=18, decimal_places=2, default=0)
     observaciones = models.TextField(null=True, blank=True)
 
     class Meta:
-        db_table = "producto"   
+        db_table = "producto"
         ordering = ['codigo']
         unique_together = [
-                "cia", "codigo"
-            ]
+            "cia", "codigo"
+        ]
 
     def __str__(self):
-        return self.codigo 
-  
+        return '%s %s' % (self.codigo, self.descripcion)        
+
+
 class Direccion(models.Model):
-    direccion_id = models.BigAutoField(primary_key=True) 
-    persona = models.ForeignKey('Persona', related_name='p_direcciones', null=False, blank=False, on_delete=models.PROTECT)    
-    ciudad = models.ForeignKey('Ciudad', related_name='c_direcciones', null=False, blank=False, on_delete=models.PROTECT) 
-    estado = models.ForeignKey('Estado', related_name='e_direcciones', null=False, blank=False, on_delete=models.PROTECT)    
-    pais = models.ForeignKey('Pais', related_name='p_direcciones', null=False, blank=False, on_delete=models.PROTECT)            
+    direccion_id = models.BigAutoField(primary_key=True)
+    persona = models.ForeignKey('Persona', related_name='p_direcciones',
+                                null=False, blank=False, on_delete=models.PROTECT)
+    ciudad = models.ForeignKey('Ciudad', related_name='c_direcciones',
+                               null=False, blank=False, on_delete=models.PROTECT)
+    estado = models.ForeignKey('Estado', related_name='e_direcciones',
+                               null=False, blank=False, on_delete=models.PROTECT)
+    pais = models.ForeignKey('Pais', related_name='p_direcciones',
+                             null=False, blank=False, on_delete=models.PROTECT)
     direccion = models.TextField()
     direccion_completa = models.TextField()
 
     class Meta:
-        db_table = "direccion"   
+        db_table = "direccion"
 
     def __str__(self):
-        return self.direccion_completa        
+        return self.direccion_completa
+
 
 class SesionTrabajo(models.Model):
-    sesion_id = models.BigAutoField(primary_key=True) 
-    mitoken = models.CharField(max_length=512, null=False, blank=False, unique=True)  
-    cia = models.ForeignKey('Cia', related_name='c_sesiontrabajos', null=True, blank=False, on_delete=models.PROTECT) 
-    usuario = models.ForeignKey(Usuario, related_name='u_sesiontrabajos', null=False, blank=False, on_delete=models.PROTECT) 
-    parametros = models.TextField(null=True, blank=True)  
+    sesion_id = models.BigAutoField(primary_key=True)
+    mitoken = models.CharField(
+        max_length=512, null=False, blank=False, unique=True)
+    cia = models.ForeignKey('Cia', related_name='c_sesiontrabajos',
+                            null=True, blank=False, on_delete=models.PROTECT)
+    usuario = models.ForeignKey(Usuario, related_name='u_sesiontrabajos',
+                                null=False, blank=False, on_delete=models.PROTECT)
+    parametros = models.TextField(null=True, blank=True)
 
     class Meta:
-        db_table = "sesion_trabajo"  
+        db_table = "sesion_trabajo"
 
 
 
 class DocRep(models.Model):
-    
-    docrep_id = models.BigAutoField(primary_key=True) 
-    cia = models.ForeignKey('Cia', related_name='c_docreps', null=False, blank=False, on_delete=models.PROTECT) 
-    persona = models.ForeignKey('Persona', related_name='p_docreps', null=False, blank=False, on_delete=models.PROTECT)
-    direccion = models.ForeignKey('Direccion', related_name='dir_docreps', null=False, blank=False, on_delete=models.PROTECT)  
-    # ucrea = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ucrea_docreps', null=False, blank=False, on_delete=models.PROTECT)   
-    ucrea = models.ForeignKey('Usuario', related_name='ucrea_docreps', null=False, blank=False, on_delete=models.PROTECT)   
-    uaprueba = models.ForeignKey('Usuario', related_name='uapro_docreps', null=True, blank=True, on_delete=models.PROTECT)
-    uanula = models.ForeignKey('Usuario', related_name='uanu_docreps', null=True, blank=True, on_delete=models.PROTECT)  
-    ufactura = models.ForeignKey('Usuario', related_name='ufact_docreps', null=True, blank=True, on_delete=models.PROTECT)  
-    origen = models.ForeignKey('DocRep', related_name='orig_docreps', null=True, blank=True, on_delete=models.PROTECT)  
-    tipo_documento = models.PositiveSmallIntegerField(choices=tipos_15, default=0)  
-    numero = models.CharField(max_length=35) 
+
+    docrep_id = models.BigAutoField(primary_key=True)
+    cia = models.ForeignKey('Cia', related_name='c_docreps',
+                            null=False, blank=False, on_delete=models.PROTECT)
+    persona = models.ForeignKey(
+        'Persona', related_name='p_docreps', null=False, blank=False, on_delete=models.PROTECT)
+    direccion = models.ForeignKey(
+        'Direccion', related_name='dir_docreps', null=False, blank=False, on_delete=models.PROTECT)
+    # ucrea = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ucrea_docreps', null=False, blank=False, on_delete=models.PROTECT)
+    ucrea = models.ForeignKey('Usuario', related_name='ucrea_docreps',
+                              null=False, blank=False, on_delete=models.PROTECT)
+    uaprueba = models.ForeignKey(
+        'Usuario', related_name='uapro_docreps', null=True, blank=True, on_delete=models.PROTECT)
+    uanula = models.ForeignKey(
+        'Usuario', related_name='uanu_docreps', null=True, blank=True, on_delete=models.PROTECT)
+    ufactura = models.ForeignKey(
+        'Usuario', related_name='ufact_docreps', null=True, blank=True, on_delete=models.PROTECT)
+    origen = models.ForeignKey(
+        'DocRep', related_name='orig_docreps', null=True, blank=True, on_delete=models.PROTECT)
+    tipo_documento = models.PositiveSmallIntegerField(
+        choices=tipos_15, default=0)
+    numero = models.CharField(max_length=35)
     credito = models.BooleanField(default=False)
-    dias_credito = models.PositiveSmallIntegerField(default=0)  
+    dias_credito = models.PositiveSmallIntegerField(default=0)
     fecha_emision = models.DateTimeField()
-    fecha_vencimiento = models.DateTimeField() 
-    fecha_anulacion = models.DateTimeField(null=True, blank=True)  
+    fecha_vencimiento = models.DateTimeField()
+    fecha_anulacion = models.DateTimeField(null=True, blank=True)
     subtotal = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     impuesto = models.DecimalField(max_digits=18, decimal_places=2, default=0)
-    total = models.DecimalField(max_digits=18, decimal_places=2, default=0)  
+    total = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     observaciones = models.TextField(null=True, blank=True)
 
-    class Meta:         
-        db_table = "doc_rep"  
+    class Meta:
+        db_table = "doc_rep"
         ordering = ['numero']
-         
+
 
     def __str__(self):
-        return self.numero         
+        return self.numero
+
 
 class DocRepDet(models.Model):
-    docrepdet_id = models.BigAutoField(primary_key=True) 
-    docrep = models.ForeignKey('DocRep', related_name='det_docrepdets', null=False, blank=False, on_delete=models.PROTECT)  
-    producto = models.ForeignKey('Producto', related_name='prod_docrepdets', null=True, blank=False, on_delete=models.PROTECT) 
+    docrepdet_id = models.BigAutoField(primary_key=True)
+    docrep = models.ForeignKey('DocRep', related_name='det_docrepdets',
+                               null=False, blank=False, on_delete=models.PROTECT)
+    producto = models.ForeignKey(
+        'Producto', related_name='prod_docrepdets', null=True, blank=False, on_delete=models.PROTECT)
     cantidad = models.DecimalField(max_digits=18, decimal_places=2, default=0)
-    precio = models.DecimalField(max_digits=18, decimal_places=2, default=0)    
-    costo = models.DecimalField(max_digits=18, decimal_places=6, default=0) 
+    precio = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+    costo = models.DecimalField(max_digits=18, decimal_places=6, default=0)
 
-    class Meta:         
-        db_table = "doc_rep_det"  
+    class Meta:
+        db_table = "doc_rep_det"
 
 
 class Perfil(models.Model):
     perfil_id = models.BigAutoField(primary_key=True)
     nombre = models.CharField(max_length=100, unique=True)
 
-    class Meta:         
-        db_table = "perfil"  
+    class Meta:
+        db_table = "perfil"
+
 
 class Ventana(models.Model):
     ventana_id = models.BigAutoField(primary_key=True)
     nombre = models.CharField(max_length=100, unique=True)
 
-    class Meta:         
-        db_table = "ventana"  
+    class Meta:
+        db_table = "ventana"
+
 
 class UserPerfil(models.Model):
-    userperfil_id = models.BigAutoField(primary_key=True) 
-    usuario = models.ForeignKey('Usuario', related_name='up_usuarios', null=False, blank=False, on_delete=models.PROTECT) 
-    perfil = models.ForeignKey('Perfil', related_name='up_perfiles', null=False, blank=False, on_delete=models.PROTECT) 
+    userperfil_id = models.BigAutoField(primary_key=True)
+    usuario = models.ForeignKey(
+        'Usuario', related_name='up_usuarios', null=False, blank=False, on_delete=models.PROTECT)
+    perfil = models.ForeignKey('Perfil', related_name='up_perfiles',
+                               null=False, blank=False, on_delete=models.PROTECT)
 
-    class Meta:         
-        db_table = "userperfil" 
+    class Meta:
+        db_table = "userperfil"
 
         unique_together = [
-                "usuario", "perfil"
-            ]
+            "usuario", "perfil"
+        ]
+
 
 class PerfilDet(models.Model):
     perfildet_id = models.BigAutoField(primary_key=True)
-    perfil = models.ForeignKey('Perfil', related_name='det_perfiles', null=False, blank=False, on_delete=models.PROTECT) 
-    ventana = models.ForeignKey('Ventana', related_name='det_ventanas', null=False, blank=False, on_delete=models.PROTECT) 
+    perfil = models.ForeignKey('Perfil', related_name='det_perfiles',
+                               null=False, blank=False, on_delete=models.PROTECT)
+    ventana = models.ForeignKey(
+        'Ventana', related_name='det_ventanas', null=False, blank=False, on_delete=models.PROTECT)
     evento = models.CharField(max_length=100, null=False, blank=False)
 
 
-    class Meta:         
-        db_table = "perfildet"  
+    class Meta:
+        db_table = "perfildet"
         unique_together = [
-               "ventana", "perfil", "evento"
-            ]
+            "ventana", "perfil", "evento"
+        ]

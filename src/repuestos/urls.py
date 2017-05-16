@@ -69,3 +69,8 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^selectraw/', selectraw),
 ]
+
+# from django.conf.urls.defaults import *
+# urlpatterns = patterns('',
+#     (r'^admin/', include('django.contrib.admin.urls')),
+# )

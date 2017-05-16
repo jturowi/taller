@@ -11,6 +11,7 @@ import json
 import datetime
 from datetime import datetime
 from decimal import *
+import pdb
 # from dateutil import parser
 
 from rest_framework import viewsets
@@ -116,6 +117,8 @@ class EstadoViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         # print(request.user)
+
+        mivar = "hola"
         try:
             # with transaction.atomic():
             var1 = 100
@@ -135,36 +138,70 @@ class EstadoViewSet(viewsets.ModelViewSet):
             print(objFecha2)
             print("objFecha3")
             print(objFecha3)
+            # pdb.set_trace()
             # print(objFecha.astimezone(miTZ))
             print("Tipo de Fecha")
             print(type(objFecha))
 
             # raise Exception
 
-            pais = Pais.objects.create(
-                nombre="Pais error444",
-                codigo="Pe4")
+            # pais = Pais.objects.create(
+            #     nombre="Pais error444",
+            #     codigo="Pe4")
+            # pais.save()
 
-            pais.save()
+            numero = 0
+            error = 'error inicial'
+            # retorno = {}
 
+            # retorno = {'error': '', 'numero': 0, 'status': 1}
+
+            retorno = consecutivo_doc(1, 4)
+            print("retorno en el view")
+            print(retorno)
+            print("retorno.numero")
+            print(retorno['numero'])
+            if retorno['status'] == -1:
+                raise InvalidAPIQuery(retorno['error'])
+
+            
+                
+            # print("Error en consecutivo_doc")
+            # print(error)
+            # print("numero")
+            # print(numero)
+
+            #     raise InvalidAPIQuery(as_error)
+            # else:                
+            # print("Numero")
+            # print(retorno.numero)
+            
+            numero = retorno['numero']
+            costonum = float(numero)
             estado = Estado.objects.create(
                 nombre=request.data['nombre'],
                 codigo=request.data['codigo'],
                 fecha=objFecha2,
-                costo=request.data['costo'],
+                # costo=request.data['costo'],
+                costo = costonum,
                 activo=request.data['activo'],
                 pais_id=request.data['pais_id']
             )  
             # estado = Estado.objects.create(request.data)
-            var3 = midivision(100, 0)
+            # var3 = midivision(100, 0)
             serializer = EstadoSerializer(instance=estado)
 
             return Response(serializer.data)
 
         except Exception as e:
+            # raise InvalidAPIQuery(str(e))
+            # if as_error == '':  
+            print("mivar")     
+            print(mivar)          
             raise InvalidAPIQuery(
-                 _('Error Creando el estado. ') + str(e))
-            
+                _('Error Creando el estado. ') + request.data['nombre'] + ' ' + mivar + ' ' + str(e))
+            # else:
+            #     raise InvalidAPIQuery(as_error)
 
     def update(self, request, pk):
         # estado_id = int(request.data['estado_id'])
