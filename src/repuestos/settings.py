@@ -187,3 +187,26 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=12),  
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "taller"
+    }
+}
+
+# Simulacion de redis
+# pip install fakeredis
+# import fakeredis
+# CACHES = {
+#     "default": {
+#         "OPTIONS": {
+#             "REDIS_CLIENT_CLASS": "fakeredis.FakeStrictRedis",
+#         }
+#     }
+# }
+
+CACHE_TTL = 60 * 15  # 15 minutos

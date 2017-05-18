@@ -48,6 +48,12 @@ import pytz
 from rest_framework.exceptions import APIException
 
 from django.utils.translation import ugettext as _
+from django.core.cache import cache
+
+# import fakeredis
+# import simplejson
+# import marshal
+# import json
 
 # Create your views here.
 
@@ -95,6 +101,25 @@ class PaisViewSet(viewsets.ModelViewSet):
     queryset = Pais.objects.all()
     serializer_class = PaisSerializer
 
+    def list(self, request):
+        # cache = fakeredis.FakeStrictRedis()        
+        # print("cache.get(Pais")
+        # print(cache.get('estado'))
+        var1 = cache.get('estado')        
+        # var2 = simplejson.JSONDecoder(var1)
+        # var2 = json.loads(var1)
+        var2 = var1.get(pk=4)
+        print("var2")
+        print(var2.codigo, var2.nombre)
+        # for estado in var2:
+        #     print(estado.nombre)
+        # var3 = var2[0].nombre
+        # print("var3")
+        # print(var3)
+        paises = Pais.objects.all()
+        paisser = PaisSerializer(paises, many=True)
+        return Response(paisser.data)
+
 class EstadoFilter(django_filters.rest_framework.FilterSet):
     edo_ini = django_filters.NumberFilter(name="estado_id", lookup_expr='gte')
     edo_fin = django_filters.NumberFilter(name="estado_id", lookup_expr='lte')
@@ -114,6 +139,21 @@ class EstadoViewSet(viewsets.ModelViewSet):
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
     filter_class = EstadoFilter
     ordering = ('estado_id')
+
+    
+
+    def list(self, request):
+        # cache = fakeredis.FakeStrictRedis()
+        estados = Estado.objects.all()
+        edoser = EstadoSerializer(estados, many=True)
+        # simplejson.loads(var1)
+        # estadosjson = simplejson.JSONEncoder(estados)
+        # objectBytes = marshal.dumps(estados)
+        # objectBytes = json.dumps(estados)
+        cache.set('estado', estados)
+        # print("cache.get(estado")
+        # print(cache.get('estado'))
+        return Response(edoser.data)
 
     def create(self, request):
         # print(request.user)
@@ -176,7 +216,10 @@ class EstadoViewSet(viewsets.ModelViewSet):
             # print("Numero")
             # print(retorno.numero)
             
+            
+
             numero = retorno['numero']
+
             costonum = float(numero)
             estado = Estado.objects.create(
                 nombre=request.data['nombre'],

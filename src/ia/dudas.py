@@ -43,6 +43,10 @@ Crear Diccionario en el cache en una funcion
 
 Leer Diccionario en el cache en una funcion
    
+
+https://github.com/rgl/redis/downloads
+
+   
         
 ///////////////////////////////////////////////////////////////////////////////////////////////
                                         DUDAS RESUELTAS
@@ -78,10 +82,27 @@ http://docs.celeryproject.org/en/latest/django/
 
 https://redis.io
 
+docker run --name redis_taller  –p 6379:6379 redis
+
+
+pip install django-redis
 
 # Choice pueden ser dinamicos?
 
+https://niwinz.github.io/django-redis/latest/#_infinite_timeout
 
+install simplejson
+
+"""
+import fakeredis
+CACHES = {
+    "default": {
+        "OPTIONS": {
+            "REDIS_CLIENT_CLASS": "fakeredis.FakeStrictRedis",
+        }
+    }
+}
+"""
 
 
 Crear Aplicaciones -- Estructura del Proyecto y las aplicaciones
@@ -128,5 +149,12 @@ PRINCIPAL
     PARAMETROS
     CONFIGURACIONES
 
+INStALACION DE REDIS
+https://github.com/MSOpenTech/redis/releases
+
+redis-server.exe
+
+redis-cli.exe ping
+y hacer ping >>> PONG
 
 """
