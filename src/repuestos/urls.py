@@ -68,6 +68,8 @@ urlpatterns = [
     url(r'^docs/', include_docs_urls(title='API Taller')),
     url(r'^', include(router.urls)),
     url(r'^selectraw/', selectraw),
+    url(r'^report/$', views.reporte),
+    url(r'^estadopdf/$', views.estado_to_pdf_view),
 ]
 
 # from django.conf.urls.defaults import *

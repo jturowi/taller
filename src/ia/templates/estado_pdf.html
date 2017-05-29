@@ -1,0 +1,58 @@
+<html>
+<head>
+  <title>Estados</title>
+  <style>
+{#      @page {#}
+{#          size: a5 landscape;#}
+{#          size: letter landscape;#}
+{#          margin: 1cm;#}
+{#        }#}
+{#       @page template {#}
+{#            size: letter portrait;#}
+{#           margin-top: 35cm;#}
+{#            left: 15cm;#}
+{#            right: 2cm;#}
+{#          }#}
+    @page {
+      size: letter portrait;
+      margin-top: 3cm;
+            left: 2cm;
+            right: 1cm;
+    }
+    body {
+      background-color: #f7f7f7;
+    }
+      table {
+            border: 1px solid black;
+        }
+      th, td {
+            border: 0.2px solid black;
+        }
+      .separdo {
+            padding-left: 10px;
+        }
+  </style>
+</head>
+<body>
+  <h1>Listado de Estados del Pais: {{ pais.nombre }}</h1>
+  <table style="width:100%">
+        <tr>
+            <th width=50%>Nombre Del Estado</th>
+            <th width=15%>Código</th>
+            <th width=35%>Creación</th>
+        </tr>
+
+        {% for estado in estados %}
+            <tr>
+                <td class="separdo">{{ estado.nombre }}</td>
+                <td class="separdo">{{ estado.codigo }}</td>
+                <td class="separdo">{{ estado.fecha }}</td>
+            </tr>
+
+        {% endfor %}
+
+  </table>
+
+
+</body>
+</html>

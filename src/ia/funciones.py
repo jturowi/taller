@@ -3,13 +3,28 @@ import datetime
 from ia.models import CiaConsecutivo, DocRep
 from rest_framework.exceptions import APIException
 
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
 class InvalidAPIQuery(APIException):
     status_code = 400
     default_detail = 'An invalid query parameter was provided'
 
-def consecutivo_doc(cia_id, tipo_doc):
 
-    
+def consecutivo_doc(cia_id, tipo_doc):
 
     try:
         retorno = {'error': '', 'numero': 0, 'status': 1}
@@ -28,7 +43,7 @@ def consecutivo_doc(cia_id, tipo_doc):
                 print(ciaconsecutivo.tipo_documento)
                 print(ciaconsecutivo.numero)
                 numero = ciaconsecutivo.numero
-                numero = numero + 1
+                numero += 1
                 ciaconsecutivo.numero = numero
                 ciaconsecutivo.save()
             else:
